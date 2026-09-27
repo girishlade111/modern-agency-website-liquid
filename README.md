@@ -1,30 +1,77 @@
-# Modern Agency Website - Liquid 
+# Modern Agency Website — Liquid
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+A modern digital-agency marketing website with a "liquid" glassmorphism design: animated WebGL plasma/lightning hero effects, service features, logo marquee, pricing, checkout, FAQ, terms & conditions, and an admin dashboard. Originally generated with [v0.app](https://v0.app) and maintained as a full Next.js project.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/gileb64375-5584s-projects/v0-modern-agency-website-liquid)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/zZQ60MhBLVd)
+## Features
 
-## Overview
+- **Animated liquid hero** — WebGL-based `plasma.tsx` / `lightning.tsx` canvas effects (built with `ogl`)
+- **Marketing pages** — About, Pricing, FAQ, Revisions, Terms & Conditions (`app/About`, `app/faq`, `app/t&c`, …)
+- **Checkout + order form** — `app/checkout/page.tsx` and `components/order-form.tsx`
+- **Admin panel** — `app/admin` with login page (`app/admin/login`)
+- **Geo-aware pricing** — `app/api/geo` detects the visitor's country and returns INR vs USD pricing currency
+- **Logo marquee + YouTube grid** — social-proof sections with lazy-loaded video components
+- **SEO basics** — dynamic `robots.txt` and `sitemap.xml` route handlers
+- **Dark theme support** — via `next-themes`, Radix UI primitives, Tailwind CSS v4, Geist font
+- **Analytics ready** — `@vercel/analytics` integrated
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## Tech stack
 
-## Deployment
+| Layer     | Tech                                                        |
+|-----------|-------------------------------------------------------------|
+| Framework | Next.js 15.2 (App Router), React 19, TypeScript              |
+| Styling   | Tailwind CSS v4, tailwindcss-animate, Geist                   |
+| UI kit    | Radix UI primitives, shadcn/ui-style `components/ui`          |
+| Effects   | `ogl` (WebGL plasma/lightning), framer-motion-ready CSS      |
+| Forms     | react-hook-form, zod, @hookform/resolvers                    |
+| Charts    | recharts                                                     |
+| Deploy    | Vercel (original target), also deployable anywhere Next.js runs |
 
-Your project is live at:
+## Quick start
 
-**[https://vercel.com/gileb64375-5584s-projects/v0-modern-agency-website-liquid](https://vercel.com/gileb64375-5584s-projects/v0-modern-agency-website-liquid)**
+```bash
+# install (pnpm or npm)
+pnpm install        # or: npm install --legacy-peer-deps
 
-## Build your app
+# run the dev server
+pnpm dev            # or: npm run dev
 
-Continue building your app on:
+# production build
+pnpm build && pnpm start
+```
 
-**[https://v0.app/chat/projects/zZQ60MhBLVd](https://v0.app/chat/projects/zZQ60MhBLVd)**
+Open http://localhost:3000 to view the site.
 
-## How It Works
+> **Security note:** if you keep `next` at `15.2.4`, bump it to `15.2.8` or newer (`npm i next@15.2.8`) — earlier 15.2.x releases are affected by CVE-2025-55182 (React2Shell RCE).
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+## Project structure
+
+```
+app/                    # App Router pages & routes
+  page.tsx              # landing page (hero, features, marquee, pricing, footer)
+  About/ faq/ t&c/      # marketing/info pages
+  checkout/             # checkout page
+  admin/                # admin panel + login
+  api/geo/route.ts      # country→currency API
+  robots.txt/ sitemap.xml/  # SEO route handlers
+components/             # site sections (hero, pricing, footer, order-form, …)
+  ui/                   # Radix-based primitives
+  plasma.tsx lightning.tsx  # WebGL liquid effects
+lib/                    # utilities
+public/                 # images, icons
+styles/                 # global styles
+files                   # v0 design-export notes (reference only)
+```
+
+## Environment variables
+
+No required env vars for the core site. `@vercel/analytics` works out of the box on Vercel. If you add your own backends (checkout/orders), put their secrets in `.env.local` (never commit them — `.env*` is already gitignored).
+
+## Deployment notes
+
+- The original deployment target was **Vercel** (v0 sync). Any platform that runs Next.js works (Vercel, Netlify, a Node host).
+- `next.config.mjs` sets `images.unoptimized: true`, so no image-optimization backend is needed.
+- **Static export caveat:** this app uses a server route (`app/api/geo`) and dynamic SEO routes, so `output: 'export'` static export is not supported as-is — deploy to a Node-capable host if you keep those routes. If you only need the marketing pages, you can remove `app/api/geo` and the admin/checkout pages and then export statically.
+
+---
+
+Built by Girish Lade — https://ladestack.in
